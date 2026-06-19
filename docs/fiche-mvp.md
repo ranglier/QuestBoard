@@ -1,88 +1,303 @@
 # Fiche MVP — QuestBoard
 
-## Objectif du MVP
+> Version 1 — périmètre MVP stabilisé  
+> Objectif : définir la plus petite version utile permettant de tester la promesse centrale de QuestBoard.
 
-Le MVP doit valider la boucle complète :
+---
 
-> Capturer une tâche → la suivre → la terminer → gagner XP / or / provisions → lancer une expédition → récupérer un rapport narratif et une récompense.
+## 1. Vision courte
 
-Le MVP ne cherche pas encore à être beau, complet ou connecté à Microsoft 365. Il doit prouver que l’outil est utilisable et motivant.
+**QuestBoard** est un outil personnel local-first destiné à piloter le quotidien professionnel tout en alimentant un mini-jeu RPG de pause.
 
-## MVP Dashboard
+Le MVP doit valider la boucle :
 
-Fonctionnalités à inclure :
+> Capturer une tâche → la suivre → la terminer → gagner XP/or/provisions → lancer une expédition → récupérer un rapport et une récompense.
+
+Le MVP ne cherche pas encore à être beau, complet ou connecté à Microsoft 365. Il cherche à prouver que l’outil est utilisable et motivant.
+
+---
+
+## 2. Utilisateur cible
+
+Utilisateur unique : administrateur / ingénieur système.
+
+Besoins prioritaires :
+
+- ne pas perdre le fil des sujets en cours ;
+- capturer rapidement une tâche ou une note ;
+- visualiser ce qui est planifié, actif, en attente ou à relancer ;
+- éviter une liste interminable ;
+- obtenir une récompense ludique après les tâches accomplies ;
+- faire une pause courte dans un mini-jeu non intrusif.
+
+---
+
+## 3. Périmètre MVP
+
+Le MVP contient deux espaces :
+
+- **Dashboard** : suivi sérieux des tâches, projets, agenda local et relances.
+- **Camp** : mini idle RPG d’expéditions.
+
+### 3.1 Dashboard MVP
+
+Fonctionnalités incluses :
 
 - création rapide de tâche ;
-- capture avec titre seul possible ;
-- qualification minimale : titre, type, priorité ;
+- capture ultra-rapide avec titre seul ;
+- attribution ou suggestion d’un type et d’une priorité ;
 - inbox dédiée ;
 - transformation d’une entrée inbox en tâche, projet, note ou relance ;
-- statuts de base : inbox, à faire, en cours, en attente, planifié, terminé, abandonné ;
-- date de relance sur une tâche en attente ;
+- statuts de base ;
 - vue Aujourd’hui ;
-- projets et domaines personnalisables ;
+- vue Projets ;
+- domaines personnalisables ;
+- tâches en attente avec date de relance ;
+- vue dédiée aux relances ;
 - notes simples ;
 - liens externes simples ;
-- clôture de tâche ;
-- calcul automatique XP / or ;
-- historique minimal.
+- calendrier local en vue semaine si raisonnable ;
+- clôture d’une tâche ;
+- calcul automatique XP/or ;
+- historique minimal des tâches terminées.
 
-## MVP Camp
+### 3.2 Camp MVP
 
-Fonctionnalités à inclure :
+Fonctionnalités incluses :
 
 - compagnie niveau 1 ;
-- capitaine fondateur créé par l’utilisateur ;
+- création du capitaine fondateur ;
+- choix d’une classe parmi : guerrier, rôdeur, mage, soigneur, artisan ;
 - ressources : XP, or, provisions ;
-- camp fonctionnel sous forme de cartes / menus ;
+- affichage du camp sous forme de cartes ou menus ;
 - une expédition active maximum ;
-- choix d’une expédition ;
+- durées d’expédition : 30 min, 1 h, 2 h ;
 - coût en provisions ;
-- durée automatique ;
-- taux de réussite affiché ;
-- résolution non punitive ;
+- taux de réussite affiché en libellé + pourcentage ;
+- résolution automatique ;
+- aucun échec punitif ;
 - rapport narratif court ;
 - récompenses ;
-- achat d’une première amélioration : tente de repos.
+- première amélioration de camp : tente de repos.
 
-## Hors périmètre MVP
+---
 
-- synchronisation Microsoft Graph ;
+## 4. V0 technique avant MVP
+
+Avant le MVP complet, une V0 technique très courte doit être créée.
+
+Objectif : valider la stack et le socle.
+
+Contenu V0 :
+
+- dépôt projet structuré ;
+- Docker Compose ;
+- frontend SvelteKit ;
+- backend FastAPI ;
+- base SQLite ;
+- modèle `Task` minimal ;
+- création rapide d’une tâche ;
+- liste de tâches ;
+- clôture d’une tâche ;
+- calcul XP/or minimal.
+
+Critère de réussite V0 :
+
+> Depuis l’interface web locale, l’utilisateur peut créer une tâche, la terminer, et voir XP/or calculés.
+
+---
+
+## 5. Hors périmètre MVP
+
+Sont exclus du MVP :
+
+- intégration Microsoft Graph ;
+- synchronisation Outlook / To Do / Planner ;
+- application mobile ;
 - notifications Windows ;
-- gestion multi-utilisateurs ;
-- application mobile native ;
-- intégration ticketing ;
-- import automatique de mails ;
+- multi-utilisateur ;
+- gestion collaborative ;
+- sauvegarde/restauration complète ;
 - IA embarquée ;
-- statistiques avancées ;
-- carte du monde complexe ;
+- imports automatiques de mails ou tickets ;
 - pixel art définitif ;
+- carte du monde ;
+- plusieurs expéditions simultanées ;
 - équipement détaillé ;
 - objets rares ;
 - traits de personnalité ;
-- plusieurs expéditions simultanées.
+- journal de compagnie dédié.
 
-## V0 technique préalable
+---
 
-Avant le MVP complet, une V0 technique courte est recommandée :
+## 6. Critères d’acceptation MVP
 
+Le MVP est considéré comme atteint si :
+
+1. L’application démarre localement via Docker Compose.
+2. Le Dashboard est affiché par défaut.
+3. L’utilisateur peut capturer une tâche en quelques secondes.
+4. L’utilisateur peut consulter une vue Aujourd’hui exploitable.
+5. L’utilisateur peut envoyer une entrée d’inbox vers une tâche ou une note.
+6. L’utilisateur peut suivre un projet avec notes et tâches associées.
+7. L’utilisateur peut créer une tâche en attente avec date de relance.
+8. Une tâche terminée génère XP/or selon les règles de scoring.
+9. Les ressources sont visibles dans le Camp.
+10. L’utilisateur peut créer son capitaine fondateur.
+11. L’utilisateur peut lancer une expédition.
+12. L’expédition se termine automatiquement après sa durée.
+13. Le rapport d’expédition est affiché.
+14. Les récompenses de l’expédition sont créditées.
+15. L’utilisateur peut acheter ou améliorer la tente de repos.
+
+---
+
+## 7. Risques MVP
+
+### Friction de saisie
+
+Risque principal. La capture doit rester extrêmement rapide.
+
+Mesures :
+
+- champ titre seul possible ;
+- type/priorité proposés ;
+- qualification différée ;
+- raccourci clavier souhaité.
+
+### Surcomplexité RPG
+
+Le Camp ne doit pas ralentir le Dashboard.
+
+Mesures :
+
+- une seule expédition active ;
+- pas d’équipement détaillé ;
+- pas de carte ;
+- pas d’objets rares en MVP.
+
+### Intégration Microsoft
+
+L’intégration Microsoft est importante mais incertaine.
+
+Mesures :
+
+- calendrier local V1 ;
+- intégration Microsoft traitée comme chantier séparé ;
+- QuestBoard reste utilisable hors réseau professionnel.
+
+### Données sensibles
+
+QuestBoard manipule des informations professionnelles.
+
+Mesures :
+
+- local-first ;
+- pas de cloud obligatoire ;
+- libellés sobres recommandés ;
+- pas de secrets, tokens, mots de passe ou données RH détaillées.
+
+---
+
+## 8. Scoring MVP
+
+XP par difficulté :
+
+| Difficulté | XP |
+|---|---:|
+| Très simple | 5 |
+| Simple | 10 |
+| Standard | 25 |
+| Difficile | 50 |
+| Complexe | 80 |
+| Gros jalon | 150 |
+
+Or par difficulté :
+
+| Difficulté | Or |
+|---|---:|
+| Très simple | 2 |
+| Simple | 5 |
+| Standard | 10 |
+| Difficile | 20 |
+| Complexe | 35 |
+| Gros jalon | 75 |
+
+Bonus automatiques :
+
+| Cas | Bonus |
+|---|---:|
+| Interruption traitée | +10 XP / +5 or |
+| Incident critique résolu | +50 XP / +25 or |
+| Sujet en attente débloqué | +20 XP / +10 or |
+| Documentation produite | +10 XP / +5 or |
+| Réunion organisée par l’utilisateur | +10 XP / +5 or |
+
+---
+
+## 9. Roadmap MVP opérationnelle
+
+### Lot 0 — Squelette technique
+
+- dépôt ;
 - Docker Compose ;
-- API FastAPI ;
-- frontend SvelteKit ;
-- base SQLite ;
-- modèle Task minimal ;
-- capture rapide ;
-- clôture de tâche ;
-- calcul XP / or minimal.
+- SvelteKit ;
+- FastAPI ;
+- SQLite ;
+- healthcheck API.
 
-## Critères de réussite
+### Lot 1 — Tâches minimales
 
-Le MVP est réussi si :
+- modèle Task ;
+- création rapide ;
+- liste ;
+- clôture ;
+- scoring XP/or.
 
-- une tâche peut être capturée en quelques secondes ;
-- la vue Aujourd’hui aide réellement à reprendre le fil ;
-- une tâche terminée génère une récompense ;
-- les récompenses permettent de lancer une expédition ;
-- l’expédition se résout sans attention continue ;
-- le Camp donne envie d’être consulté pendant une pause courte ;
-- l’usage reste sobre et non intrusif.
+### Lot 2 — Dashboard utile
+
+- vue Aujourd’hui ;
+- statuts ;
+- priorités ;
+- filtres ;
+- tâches en cours ;
+- tâches en attente / relances.
+
+### Lot 3 — Inbox et projets
+
+- inbox dédiée ;
+- transformer en tâche/projet/note/relance ;
+- domaines ;
+- vue Projets ;
+- fiche projet.
+
+### Lot 4 — Calendrier local
+
+- événements locaux ;
+- vue semaine ;
+- tâches planifiées ;
+- lien tâche ↔ bloc calendrier.
+
+### Lot 5 — Camp minimal
+
+- compagnie ;
+- capitaine ;
+- ressources ;
+- camp ;
+- expédition ;
+- rapport ;
+- récompenses ;
+- tente de repos.
+
+---
+
+## 10. Définition finale du MVP
+
+Le MVP de QuestBoard est réussi si l’utilisateur peut s’en servir pendant une vraie journée de travail pour :
+
+- capturer rapidement des tâches ;
+- retrouver ce qui est prévu, actif, en attente ou à relancer ;
+- terminer des tâches ;
+- voir une progression ;
+- faire une courte pause dans le Camp ;
+- lancer et récupérer une expédition sans être distrait en continu.
