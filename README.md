@@ -55,6 +55,28 @@ Expected local services:
 - Backend API: http://localhost:8000
 - Backend healthcheck: http://localhost:8000/health
 
+### V0 task loop
+
+The technical V0 validates the core stack end to end: create a task, complete
+it, and see the computed XP/gold. From the frontend at http://localhost:5173 you
+can capture a task, then click **Terminer** to credit XP (from difficulty) and
+gold (from priority), per the scoring rules in `docs/cadrage-projet.md` §5.
+
+API surface (V0):
+
+- `POST /tasks` — create a task (only `title` is required)
+- `GET /tasks` — list tasks
+- `POST /tasks/{id}/complete` — complete a task, returns XP/gold gained
+- `GET /stats` — aggregated XP/gold over completed tasks
+
+Backend tests:
+
+```bash
+cd backend
+pip install -e ".[dev]"
+pytest
+```
+
 ## Data policy
 
 QuestBoard is intended to be local-first. Real professional data, secrets, tokens, credentials and sensitive operational details must not be committed to this repository.
