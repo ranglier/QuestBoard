@@ -385,6 +385,13 @@ Décisions :
 | Réunion organisée par l’utilisateur | +10 | +5 |
 | Projet / quête terminé | Récompense spéciale | Récompense spéciale |
 
+### 5.5 Répartition XP et or d’expédition
+
+Décisions (voir `docs/economie-rpg.md`) :
+
+- **Répartition de l’XP d’une tâche terminée** : **100 % à la compagnie** et **50 % au capitaine**. L’XP du capitaine est créditée en plus, sans déduire celle de la compagnie.
+- **Or d’expédition** : le gain net d’une expédition vise environ **la moitié du gain or des tâches du jour**, et reste **plafonné sous lui**. Le travail réel demeure ainsi la principale source d’or ; l’expédition complète sans s’y substituer.
+
 ---
 
 ## 6. Camp / RPG
@@ -445,6 +452,38 @@ Rapport d’expédition :
 
 - Format : court paragraphe narratif.
 
+Formule de réussite (voir `docs/economie-rpg.md`) :
+
+```text
+taux = base(risque) + bonus_affinité + (Compétence × 0,5)
+       borné entre 30 % et 95 %
+```
+
+Taux de base par risque :
+
+| Risque | Taux de base |
+|---|---:|
+| Faible | 75 % |
+| Moyen | 60 % |
+| Élevé | 45 % |
+
+- `bonus_affinité` = **+10 %** si la classe de l’aventurier correspond à la classe favorite de l’expédition, sinon 0.
+
+Bandes de résultat (multiplicateur de récompense) :
+
+| Résultat | Multiplicateur |
+|---|---:|
+| Grande réussite | ×1,3 |
+| Réussite | ×1,0 |
+| Réussite mitigée | ×0,6 |
+| Revers | ×0,3 |
+
+Conséquences d’un revers :
+
+- L’aventurier peut devenir **Fatigué** (indisponible ~1 h) ou **Blessé** (indisponible ~4 h).
+- La **tente de repos** réduit ces durées (~40 % au niveau 1).
+- **Jamais de perte au-delà des provisions misées** : même un revers rend un peu de butin et un court récit.
+
 ### 6.3 Ressources RPG
 
 Ressources V1 :
@@ -490,7 +529,7 @@ Première amélioration de camp :
 
 - La **tente de repos**.
 - Elle commence très simplement, comme une couverture ou un abri rudimentaire.
-- Elle peut être améliorée progressivement.
+- Elle peut être améliorée progressivement, selon trois paliers : **200 / 550 / 1200 or** (voir `docs/economie-rpg.md`).
 
 ### 6.5 Aventuriers et classes
 
@@ -594,6 +633,7 @@ Adventurer:
   is_captain: boolean
   level: number
   xp: number
+  competence: number          # NOUVEAU — démarre à 6, +1 par niveau
   status: available | expedition | resting | tired | injured
 
 Expedition:
@@ -602,6 +642,7 @@ Expedition:
   description: string
   duration_minutes: number
   risk: low | medium | high
+  favored_class: warrior | ranger | mage | healer | artisan   # NOUVEAU
   success_rate: number
   status: available | active | completed
   started_at: datetime
@@ -621,6 +662,8 @@ CampUpgrade:
   cost_gold: number
   effect: string
 ```
+
+Note d’implémentation (local-first, sans process always-on) : la résolution d’une expédition se calcule **en lazy** au prochain chargement, à partir de `started_at + duration_minutes` (voir `docs/economie-rpg.md`).
 
 Repoussé après V1 :
 
@@ -880,6 +923,20 @@ Décisions ajoutées ou confirmées dans les dernières itérations :
 - Risques principaux : friction de saisie et intégration Microsoft.
 - Le pixel art ne bloque pas la V0/MVP : placeholders d’abord, direction artistique ensuite.
 - PixelLab est identifié comme piste possible pour l’aide à la génération d’assets, mais pas comme dépendance obligatoire.
+
+Décisions économie & expéditions (V1) — détail dans `docs/economie-rpg.md` :
+
+- Répartition de l’XP d’une tâche : 100 % à la compagnie, 50 % au capitaine.
+- Or d’expédition : gain net visant ~½ du gain or des tâches du jour, plafonné sous lui.
+- Réussite d’expédition : `taux = base(risque) + bonus_affinité + (Compétence × 0,5)`, borné 30–95 %.
+- Taux de base par risque : Faible 75 %, Moyen 60 %, Élevé 45 %.
+- Bonus d’affinité de classe : +10 % si la classe correspond à la classe favorite de l’expédition.
+- Bandes de résultat : Grande réussite ×1,3, Réussite ×1, Mitigée ×0,6, Revers ×0,3.
+- Revers : Fatigué ~1 h, Blessé ~4 h, réduits ~40 % par la tente de repos ; jamais de perte au-delà des provisions misées.
+- Tente de repos : paliers 200 / 550 / 1200 or.
+- Nouveau champ `competence` sur Adventurer (démarre à 6, +1 par niveau) et `favored_class` sur Expedition.
+- Résolution d’expédition calculée en lazy à partir de `started_at + duration_minutes`.
+- Recrutement, montée en niveau des membres et arbre de compétences restent hors MVP (profondeur RPG, post-MVP).
 
 ---
 

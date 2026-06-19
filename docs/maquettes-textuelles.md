@@ -43,7 +43,7 @@ Permettre de comprendre rapidement :
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ Dashboard — Aujourd’hui                                         Jeudi 18/06 │
-│ Vue jour | Vue semaine                                  [Filtres] [Réglages]│
+│ Vue jour                                                [Filtres] [Réglages]│
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ AGENDA / CALENDRIER LOCAL                                                   │
 │ ┌───────────────┬─────────────────────────────────────────────────────────┐ │
@@ -93,6 +93,7 @@ Permettre de comprendre rapidement :
 - Le nombre de tâches affichées est réglable, avec **8** par défaut.
 - L’XP/or potentiel de la journée n’est pas affiché.
 - Les éléments RPG ne sont pas visibles dans cette vue.
+- **Aujourd’hui est une vue jour uniquement** : le bascule « Vue semaine » est retiré de l’en-tête. La dimension semaine et le placement de créneaux vivent dans le **Calendrier local** (option A, voir `docs/economie-rpg.md`).
 
 ---
 
@@ -307,7 +308,7 @@ Permettre une pause courte, non intrusive, centrée sur la compagnie itinérante
 │ ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐     │
 │ │ Feu de camp         │ │ Couverture          │ │ Chariot intendance  │     │
 │ │ Accueil             │ │ Niveau 0            │ │ Ressources          │     │
-│ │ Rapport récent      │ │ [Améliorer 25 or]   │ │ Provisions / or     │     │
+│ │ Rapport récent      │ │ [Améliorer 200 or]  │ │ Provisions / or     │     │
 │ └─────────────────────┘ └─────────────────────┘ └─────────────────────┘     │
 │ ┌─────────────────────┐ ┌─────────────────────┐                             │
 │ │ Table de cartes      │ │ Coffre de compagnie│                             │

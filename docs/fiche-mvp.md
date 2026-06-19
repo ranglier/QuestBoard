@@ -73,9 +73,10 @@ Fonctionnalités incluses :
 - une expédition active maximum ;
 - durées d’expédition : 30 min, 1 h, 2 h ;
 - coût en provisions ;
-- taux de réussite affiché en libellé + pourcentage ;
+- taux de réussite calculé puis affiché en libellé + pourcentage (formule : voir `docs/economie-rpg.md`) ;
 - résolution automatique ;
 - aucun échec punitif ;
+- états **Fatigué** / **Blessé** de l’aventurier après un revers ;
 - rapport narratif court ;
 - récompenses ;
 - première amélioration de camp : tente de repos.
@@ -244,6 +245,13 @@ Récompense = XP(complexité) + Or(priorité) + bonus automatiques éventuels
 | Documentation produite | +10 | +0 |
 | Réunion organisée par l’utilisateur | +10 | +5 |
 | Projet / quête terminé | Récompense spéciale | Récompense spéciale |
+
+### 8.5 Répartition XP et or d’expédition
+
+Voir `docs/economie-rpg.md` pour le détail :
+
+- **XP d’une tâche terminée** : **100 % à la compagnie**, **50 % au capitaine** (créditée en plus).
+- **Or d’expédition** : gain net visant **~½ du gain or des tâches du jour**, **plafonné sous lui**. Le travail réel reste la principale source d’or.
 
 ---
 
