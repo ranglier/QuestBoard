@@ -13,7 +13,7 @@
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ QuestBoard                                      [+ Capture] [Mode discret]  │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Dashboard | Inbox | Projets | Calendrier | Historique | Camp               │
+│ Dashboard | Inbox | Projets | Calendrier | Historique | Camp                │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -70,14 +70,14 @@ Permettre de comprendre rapidement :
 │ [En attente] RSSI — avis délégation domaine Mailjet                         │
 │   Actions rapides : [Relancer aujourd’hui] [Dans 2 jours] [Lundi prochain]  │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ REPRENDRE                                                                    │
+│ REPRENDRE                                                                   │
 │ Derniers sujets modifiés récemment :                                        │
 │ - BAL DRH — inventaire N1/N2                                                │
 │ - Audit mail — matrice flux SMTP                                            │
 │ - Récupération CSV RH                                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ À FAIRE PROPOSÉ                                                             │
-│ [Normale] [Documentation] Mettre à jour note d’exploitation BAL DRH          │
+│ [Normale] [Documentation] Mettre à jour note d’exploitation BAL DRH         │
 │ [Basse] [Veille] Relire notes alternatives O365                             │
 │                                                                             │
 │ Affichage : 8 tâches maximum par défaut — [Voir plus]                       │
@@ -106,10 +106,10 @@ Créer une entrée en moins de 10 secondes.
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ Capture rapide                                                │
+│ Capture rapide                                               │
 ├──────────────────────────────────────────────────────────────┤
-│ Titre                                                         │
-│ [__________________________________________________________]  │
+│ Titre                                                        │
+│ [_________________________________________________________]  │
 │                                                              │
 │ Suggestions automatiques :                                   │
 │ Type : [Demande]     Priorité : [Normale]                    │
@@ -128,9 +128,9 @@ Comportement :
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ Capture rapide — options                                      │
+│ Capture rapide — options                                     │
 ├──────────────────────────────────────────────────────────────┤
-│ Titre            [________________________________________]   │
+│ Titre            [_______________________________________]   │
 │ Type             [Incident ▼]                                │
 │ Priorité         [Haute ▼]                                   │
 │ Source           [Ticket ▼]                                  │
@@ -138,7 +138,7 @@ Comportement :
 │ Statut           [À faire ▼]                                 │
 │ Date prévue      [Optionnel]                                 │
 │ Relance          [Optionnel]                                 │
-│ Notes rapides    [________________________________________]   │
+│ Notes rapides    [_______________________________________]   │
 │                                                              │
 │ [Créer] [Créer et ouvrir] [Annuler]                          │
 └──────────────────────────────────────────────────────────────┘
@@ -158,18 +158,18 @@ Capturer sans réfléchir, puis qualifier plus tard.
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ Inbox                                                        [Traiter tout] │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Entrée brute                                                                  │
+│ Entrée brute                                                                │
 │ ┌─────────────────────────────────────────────────────────────────────────┐ │
-│ │ “Relancer NOC sur flux MECM 2701”                                      │ │
-│ │ Source : demande | créé aujourd’hui 10:42                              │ │
-│ │ Actions : [Tâche] [Projet] [Note] [Relance] [Archiver]                 │ │
+│ │ “Relancer NOC sur flux MECM 2701”                                       │ │
+│ │ Source : demande | créé aujourd’hui 10:42                               │ │
+│ │ Actions : [Tâche] [Projet] [Note] [Relance] [Archiver]                  │ │
 │ └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
 │ ┌─────────────────────────────────────────────────────────────────────────┐ │
-│ │ Copie mail / log / note libre                                          │ │
-│ │ Source : mail | créé hier 16:20                                        │ │
-│ │ Aperçu : “Bonjour, pouvez-vous vérifier...”                            │ │
-│ │ Actions : [Tâche] [Projet] [Note] [Relance] [Archiver]                 │ │
+│ │ Copie mail / log / note libre                                           │ │
+│ │ Source : mail | créé hier 16:20                                         │ │
+│ │ Aperçu : “Bonjour, pouvez-vous vérifier...”                             │ │
+│ │ Actions : [Tâche] [Projet] [Note] [Relance] [Archiver]                  │ │
 │ └─────────────────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -208,7 +208,7 @@ Notes             [Texte original conservé ici]
 │   Prochaine action : analyser règles transport obsolètes                    │
 │   Actions : [Ouvrir] [Ajouter note] [Archiver]                              │
 │                                                                             │
-│ [MECM] Remote Control Windows 11                                             │
+│ [MECM] Remote Control Windows 11                                            │
 │   Progression : 20 % | Dernière note : port 2701 écoute côté client         │
 │   Prochaine action : vérifier piste mise à jour Windows 11                  │
 │   Actions : [Ouvrir] [Ajouter note] [Planifier]                             │
@@ -262,7 +262,7 @@ Offrir une planification locale en attendant une éventuelle intégration Micros
 ### 6.2 Vue semaine minimale
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────────────────┐
 │ Calendrier local — Semaine du 18/06                         [+ Événement]  │
 ├────────────┬────────────┬────────────┬────────────┬────────────┬───────────┤
 │ Lundi      │ Mardi      │ Mercredi   │ Jeudi      │ Vendredi   │ Notes     │
@@ -299,40 +299,40 @@ Permettre une pause courte, non intrusive, centrée sur la compagnie itinérante
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ Camp — Compagnie des routes grises                         [Retour Dashboard]│
+│ Camp — Compagnie des routes grises                       [Retour Dashboard] │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ Compagnie niveau 1        XP : 45 / 100       Or : 30       Provisions : 4   │
+│ Compagnie niveau 1       XP : 45 / 100       Or : 30       Provisions : 4   │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ CAMP                                                                        │
-│ ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐    │
-│ │ Feu de camp          │ │ Tente de repos       │ │ Chariot intendance   │    │
-│ │ Accueil              │ │ Niveau 0 : couverture│ │ Ressources           │    │
-│ │ Rapport récent       │ │ [Améliorer 25 or]    │ │ Provisions / or      │    │
-│ └─────────────────────┘ └─────────────────────┘ └─────────────────────┘    │
-│ ┌─────────────────────┐ ┌─────────────────────┐                            │
-│ │ Table de cartes      │ │ Coffre de compagnie  │                            │
-│ │ Expéditions          │ │ Butin futur          │                            │
-│ └─────────────────────┘ └─────────────────────┘                            │
+│ ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐     │
+│ │ Feu de camp         │ │ Couverture          │ │ Chariot intendance  │     │
+│ │ Accueil             │ │ Niveau 0            │ │ Ressources          │     │
+│ │ Rapport récent      │ │ [Améliorer 25 or]   │ │ Provisions / or     │     │
+│ └─────────────────────┘ └─────────────────────┘ └─────────────────────┘     │
+│ ┌─────────────────────┐ ┌─────────────────────┐                             │
+│ │ Table de cartes      │ │ Coffre de compagnie│                             │
+│ │ Expéditions          │ │ Butin futur        │                             │
+│ └─────────────────────┘ └─────────────────────┘                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ CAPITAINE                                                                    │
+│ CAPITAINE                                                                   │
 │ Nom : [à définir]        Classe : Rôdeur        Niveau : 1                  │
 │ Statut : disponible      XP : 45 / 100                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ EXPÉDITION EN COURS                                                          │
-│ Aucune expédition active                                                     │
+│ EXPÉDITION EN COURS                                                         │
+│ Aucune expédition active                                                    │
 │                                                                             │
-│ Expéditions disponibles :                                                    │
-│ [30 min] Reconnaissance du vieux sentier — Risque faible — Bon 80 %          │
-│   Coût : 1 provision | Récompense : XP + or                                  │
-│   [Lancer]                                                                   │
+│ Expéditions disponibles :                                                   │
+│ [30 min] Reconnaissance du vieux sentier — Risque faible — Bon 80 %         │
+│   Coût : 1 provision | Récompense : XP + or                                 │
+│   [Lancer]                                                                  │
 │                                                                             │
-│ [1 h] Escorte d’un chariot isolé — Risque moyen — Correct 65 %               │
-│   Coût : 2 provisions | Récompense : or                                      │
-│   [Lancer]                                                                   │
+│ [1 h] Escorte d’un chariot isolé — Risque moyen — Correct 65 %              │
+│   Coût : 2 provisions | Récompense : or                                     │
+│   [Lancer]                                                                  │
 │                                                                             │
-│ [2 h] Fouille des ruines basses — Risque moyen — Correct 60 %                │
-│   Coût : 3 provisions | Récompense : XP + or + provisions possibles          │
-│   [Lancer]                                                                   │
+│ [2 h] Fouille des ruines basses — Risque moyen — Correct 60 %               │
+│   Coût : 3 provisions | Récompense : XP + or + provisions possibles         │
+│   [Lancer]                                                                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
