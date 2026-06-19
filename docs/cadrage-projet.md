@@ -281,7 +281,7 @@ Task:
   priority: low | normal | high | critical
   domain_id: string
   project_id: string
-  difficulty: trivial | easy | normal | hard | complex | boss
+  difficulty: trivial | easy | normal | hard | complex | major
   due_date: date
   planned_date: datetime
   followup_date: date
@@ -310,44 +310,63 @@ Décisions :
 - La difficulté est calculée automatiquement, avec correction manuelle possible.
 - L’énergie estimée est retirée du MVP.
 - Les tags libres ne sont pas retenus au départ.
-- `gold_reward` n’est pas retenu comme champ direct sur `Task` en V1 ; l’or est calculé à la clôture et crédité côté compagnie.
+- `gold_reward` n’est pas retenu comme champ direct sur `Task` en V1 ; l’or est calculé à la clôture selon la priorité et crédité côté compagnie.
 
 ---
 
 ## 5. Scoring XP / or
 
-### 5.1 Barème XP
+### 5.1 Principe général
 
 Décision :
 
-- Le barème XP proposé est validé comme base de départ.
+- **L’XP récompense la complexité, l’effort et l’apprentissage.**
+- **L’or récompense la priorité, la valeur opérationnelle et l’importance immédiate.**
+
+Conséquences :
+
+- Une tâche complexe mais peu prioritaire donne beaucoup d’XP et peu d’or.
+- Une tâche simple mais critique donne peu d’XP et beaucoup d’or.
+- Un incident critique difficile donne beaucoup d’XP et beaucoup d’or.
+- Les bonus automatiques complètent ce calcul selon le type ou le contexte.
+
+Formule de base :
+
+```text
+Récompense = XP(complexité) + Or(priorité) + bonus automatiques éventuels
+```
+
+### 5.2 Barème XP par complexité
+
+Décisions :
+
+- Le barème XP est basé sur la difficulté / complexité.
 - En mode sérieux, les libellés doivent rester sobres.
+- Le dernier niveau est nommé **Majeure** côté Dashboard et **Boss** côté RPG.
 
-| Mode sérieux | Mode RPG | XP |
-|---|---|---:|
-| Très simple | Triviale | 5 |
-| Simple | Simple | 10 |
-| Standard | Normale | 25 |
-| Difficile | Difficile | 50 |
-| Complexe | Complexe | 80 |
-| Gros jalon | Boss | 150 |
+| Mode sérieux | Mode RPG | Enum technique | XP |
+|---|---|---|---:|
+| Très simple | Triviale | `trivial` | 5 |
+| Simple | Simple | `easy` | 10 |
+| Standard | Normale | `normal` | 25 |
+| Difficile | Difficile | `hard` | 50 |
+| Complexe | Complexe | `complex` | 80 |
+| Majeure | Boss | `major` | 150 |
 
-### 5.2 Or
+### 5.3 Barème or par priorité
 
 Décision :
 
-- L’or suit la difficulté.
+- L’or est basé sur la priorité, et non plus sur la complexité.
 
-| Difficulté | Or |
-|---|---:|
-| Très simple | 2 |
-| Simple | 5 |
-| Standard | 10 |
-| Difficile | 20 |
-| Complexe | 35 |
-| Gros jalon | 75 |
+| Priorité | Enum technique | Or |
+|---|---|---:|
+| Basse | `low` | 2 |
+| Normale | `normal` | 5 |
+| Haute | `high` | 15 |
+| Critique | `critical` | 35 |
 
-### 5.3 Bonus automatiques
+### 5.4 Bonus automatiques
 
 Décisions :
 
@@ -357,14 +376,14 @@ Décisions :
 - Une réunion organisée par l’utilisateur donne davantage.
 - Un imprévu / interruption traité doit être valorisé.
 
-| Cas | Bonus |
-|---|---:|
-| Interruption traitée | +10 XP / +5 or |
-| Incident critique résolu | +50 XP / +25 or |
-| Sujet en attente débloqué | +20 XP / +10 or |
-| Documentation produite | +10 XP / +5 or |
-| Réunion organisée par l’utilisateur | +10 XP / +5 or |
-| Projet / quête terminé | Récompense finale spéciale |
+| Cas | Bonus XP | Bonus or |
+|---|---:|---:|
+| Interruption traitée | +0 | +5 |
+| Incident critique résolu | +0 | +25 |
+| Sujet en attente débloqué | +0 | +10 |
+| Documentation produite | +10 | +0 |
+| Réunion organisée par l’utilisateur | +10 | +5 |
+| Projet / quête terminé | Récompense spéciale | Récompense spéciale |
 
 ---
 
@@ -829,7 +848,7 @@ Décisions ajoutées ou confirmées dans les dernières itérations :
 - Source issue d’une liste simple.
 - Inbox dédiée.
 - Bouton “transformer en…” souhaité.
-- `gold_reward` n’est pas retenu comme champ direct sur `Task` en V1 ; l’or est calculé à la clôture et crédité à la compagnie.
+- `gold_reward` n’est pas retenu comme champ direct sur `Task` en V1 ; l’or est calculé à la clôture selon la priorité et crédité à la compagnie.
 - Liens externes simples prévus dès la V1.
 - `Incident` reste séparé de `Interruption / imprévu`.
 - Projet : affichage par défaut 5 à 7 actifs.
@@ -840,6 +859,8 @@ Décisions ajoutées ou confirmées dans les dernières itérations :
 - Taux de réussite affiché en libellé + pourcentage.
 - Rapport d’expédition en court paragraphe.
 - XP vers compagnie + capitaine.
+- Or calculé principalement à partir de la priorité.
+- Complexité `Majeure` côté Dashboard, `Boss` côté RPG.
 - Provisions via routines + production minimale quotidienne.
 - Objets rares repoussés après première boucle jouable.
 - Première amélioration du camp : tente de repos.
