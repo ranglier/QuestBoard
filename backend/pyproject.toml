@@ -1,0 +1,13 @@
+[project]
+name = "questboard-backend"
+version = "0.1.0"
+description = "FastAPI backend for QuestBoard"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "sqlmodel"
+]
+
+[tool.setuptools]
+packages = ["app"]
