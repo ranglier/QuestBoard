@@ -201,37 +201,49 @@ Mesures :
 
 ## 8. Scoring MVP
 
-XP par difficulté :
+### 8.1 Principe
 
-| Difficulté | XP |
+Le scoring sépare volontairement la progression et la valeur opérationnelle :
+
+- **XP** : basée sur la complexité, l’effort et l’apprentissage.
+- **Or** : basé sur la priorité, la valeur immédiate et l’importance opérationnelle.
+
+Formule de base :
+
+```text
+Récompense = XP(complexité) + Or(priorité) + bonus automatiques éventuels
+```
+
+### 8.2 XP par complexité
+
+| Complexité côté Dashboard | Libellé RPG | XP |
+|---|---|---:|
+| Très simple | Triviale | 5 |
+| Simple | Simple | 10 |
+| Standard | Normale | 25 |
+| Difficile | Difficile | 50 |
+| Complexe | Complexe | 80 |
+| Majeure | Boss | 150 |
+
+### 8.3 Or par priorité
+
+| Priorité | Or |
 |---|---:|
-| Très simple | 5 |
-| Simple | 10 |
-| Standard | 25 |
-| Difficile | 50 |
-| Complexe | 80 |
-| Gros jalon | 150 |
+| Basse | 2 |
+| Normale | 5 |
+| Haute | 15 |
+| Critique | 35 |
 
-Or par difficulté :
+### 8.4 Bonus automatiques
 
-| Difficulté | Or |
-|---|---:|
-| Très simple | 2 |
-| Simple | 5 |
-| Standard | 10 |
-| Difficile | 20 |
-| Complexe | 35 |
-| Gros jalon | 75 |
-
-Bonus automatiques :
-
-| Cas | Bonus |
-|---|---:|
-| Interruption traitée | +10 XP / +5 or |
-| Incident critique résolu | +50 XP / +25 or |
-| Sujet en attente débloqué | +20 XP / +10 or |
-| Documentation produite | +10 XP / +5 or |
-| Réunion organisée par l’utilisateur | +10 XP / +5 or |
+| Cas | Bonus XP | Bonus or |
+|---|---:|---:|
+| Interruption traitée | +0 | +5 |
+| Incident critique résolu | +0 | +25 |
+| Sujet en attente débloqué | +0 | +10 |
+| Documentation produite | +10 | +0 |
+| Réunion organisée par l’utilisateur | +10 | +5 |
+| Projet / quête terminé | Récompense spéciale | Récompense spéciale |
 
 ---
 
