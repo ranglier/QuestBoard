@@ -132,6 +132,16 @@ export interface NewEvent {
   notes?: string;
 }
 
+export type EventUpdate = Partial<{
+  title: string;
+  event_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  kind: EventKind;
+  task_id: number | null;
+  notes: string;
+}>;
+
 export interface CompletionResult {
   task: Task;
   xp_gained: number;
@@ -227,6 +237,16 @@ export async function createEvent(payload: NewEvent): Promise<CalendarEvent> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
+    })
+  );
+}
+
+export async function updateEvent(id: number, patch: EventUpdate): Promise<CalendarEvent> {
+  return asJson(
+    await fetch(`${BASE}/events/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch)
     })
   );
 }
