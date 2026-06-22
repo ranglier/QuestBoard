@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -5,17 +6,15 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Autorités racine locales (proxy d'entreprise qui intercepte TLS). Le dossier
-# certs/ existe toujours (.gitkeep) ; les .crt sont fournis par machine et NON
-# versionnés. S'ils sont absents, cette étape est neutre (PyPI public direct).
-COPY certs/ /certs/
-
 COPY pyproject.toml ./
 COPY app ./app
-RUN if ls /certs/*.crt >/dev/null 2>&1; then \
-        cat /certs/*.crt >> /etc/ssl/certs/ca-certificates.crt && \
-        export PIP_CERT=/etc/ssl/certs/ca-certificates.crt; \
-    fi; \
+
+# Build-time only : si un secret CA "proxy_ca" est fourni (proxy d'entreprise qui
+# intercepte TLS), pip l'utilise pour valider PyPI. Le secret n'est PAS persiste
+# dans l'image. Sans secret (cas par defaut), build PyPI public normal.
+# Activation locale : voir compose.override.example.yaml.
+RUN --mount=type=secret,id=proxy_ca \
+    if [ -s /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
     pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -e .
 

@@ -14,10 +14,11 @@ venv/
 # Local toolchains (portable Python / Node installed locally, no admin)
 .tools/
 
-# Local CA bundles for corporate TLS interception (provided per machine, never committed)
-**/certs/*.crt
-**/certs/*.pem
-!**/certs/.gitkeep
+# Corporate TLS proxy: local CA bundle + real compose override (per machine, never committed).
+# The mechanism is documented by compose.override.example.yaml (tracked).
+/certs/
+compose.override.yaml
+compose.override.yml
 
 # Node / SvelteKit
 node_modules/
@@ -48,3 +49,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Claude Code local config
+.claude/
