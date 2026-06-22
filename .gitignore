@@ -14,6 +14,11 @@ venv/
 # Local toolchains (portable Python / Node installed locally, no admin)
 .tools/
 
+# Local CA bundles for corporate TLS interception (provided per machine, never committed)
+**/certs/*.crt
+**/certs/*.pem
+!**/certs/.gitkeep
+
 # Node / SvelteKit
 node_modules/
 .svelte-kit/

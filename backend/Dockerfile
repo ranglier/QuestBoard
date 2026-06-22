@@ -5,11 +5,19 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY pyproject.toml ./
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
+# Autorités racine locales (proxy d'entreprise qui intercepte TLS). Le dossier
+# certs/ existe toujours (.gitkeep) ; les .crt sont fournis par machine et NON
+# versionnés. S'ils sont absents, cette étape est neutre (PyPI public direct).
+COPY certs/ /certs/
 
+COPY pyproject.toml ./
 COPY app ./app
+RUN if ls /certs/*.crt >/dev/null 2>&1; then \
+        cat /certs/*.crt >> /etc/ssl/certs/ca-certificates.crt && \
+        export PIP_CERT=/etc/ssl/certs/ca-certificates.crt; \
+    fi; \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -e .
 
 EXPOSE 8000
 
