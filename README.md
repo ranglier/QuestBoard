@@ -49,6 +49,11 @@ The repository is prepared for Docker Compose from the beginning.
 docker compose up --build
 ```
 
+> **Windows note:** Docker Desktop needs a backend engine. If `docker compose up`
+> reports the daemon is unreachable, enable WSL2 first (`wsl --install`, requires
+> admin rights and a reboot), then start Docker Desktop. If neither WSL2 nor
+> Hyper-V is available, use the native run described below.
+
 Expected local services:
 
 - Frontend: http://localhost:5173
@@ -76,6 +81,28 @@ cd backend
 pip install -e ".[dev]"
 pytest
 ```
+
+### Run without Docker (local toolchains)
+
+On a machine without Docker (or while WSL2 is being set up), QuestBoard can run
+natively. This expects **portable toolchains** under `.tools/` (git-ignored,
+no admin rights required):
+
+- `.tools/Python312/python.exe` — Python 3.12 with backend deps installed via
+  `python -m pip install -e "backend[dev]"`
+- `.tools/node/` — a portable Node.js (e.g. v22) extracted there
+
+Then launch both servers from PowerShell:
+
+```powershell
+pwsh -File scripts\dev-local.ps1
+```
+
+This starts uvicorn (http://127.0.0.1:8000) and Vite (http://127.0.0.1:5173).
+
+> **Proxy note:** a corporate proxy may intercept `localhost`. If the browser
+> cannot reach the API, add `127.0.0.1` and `localhost` to the proxy exceptions
+> (`NO_PROXY`).
 
 ## Data policy
 
