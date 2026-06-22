@@ -9,7 +9,7 @@ from sqlmodel import Session, select
 
 from ..db import get_session
 from ..models import Task, TaskStatus
-from ..schemas import CompletionResult, Stats, TaskCreate, TaskRead
+from ..schemas import CompletionResult, Stats, TaskCreate, TaskRead, TaskUpdate
 from ..scoring import default_difficulty_for_type, gold_for_priority, xp_for_difficulty
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
@@ -21,9 +21,14 @@ def create_task(payload: TaskCreate, session: Session = Depends(get_session)) ->
     task = Task(
         title=payload.title,
         description=payload.description,
+        notes=payload.notes,
         type=payload.type,
         priority=payload.priority,
         difficulty=difficulty,
+        status=payload.status,
+        planned_date=payload.planned_date,
+        due_date=payload.due_date,
+        followup_date=payload.followup_date,
     )
     session.add(task)
     session.commit()
@@ -34,6 +39,30 @@ def create_task(payload: TaskCreate, session: Session = Depends(get_session)) ->
 @router.get("", response_model=list[TaskRead])
 def list_tasks(session: Session = Depends(get_session)) -> list[Task]:
     return list(session.exec(select(Task).order_by(Task.created_at.desc())).all())
+
+
+@router.patch("/{task_id}", response_model=TaskRead)
+def update_task(
+    task_id: int, payload: TaskUpdate, session: Session = Depends(get_session)
+) -> Task:
+    task = session.get(Task, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Tâche introuvable")
+
+    data = payload.model_dump(exclude_unset=True)
+    if data.get("status") == TaskStatus.done:
+        raise HTTPException(
+            status_code=422,
+            detail="Utiliser POST /tasks/{id}/complete pour terminer une tâche",
+        )
+
+    for field, value in data.items():
+        setattr(task, field, value)
+    task.updated_at = datetime.now(timezone.utc)
+    session.add(task)
+    session.commit()
+    session.refresh(task)
+    return task
 
 
 @router.post("/{task_id}/complete", response_model=CompletionResult)

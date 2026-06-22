@@ -7,7 +7,7 @@ Expedition…) viendront avec le MVP Camp (voir docs/cadrage-projet.md §8).
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from enum import Enum
 
 from sqlmodel import Field, SQLModel
@@ -72,10 +72,16 @@ class Task(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str
     description: str = ""
+    notes: str = ""
     type: TaskType = TaskType.exploitation
     priority: TaskPriority = TaskPriority.normal
     difficulty: TaskDifficulty = TaskDifficulty.normal
     status: TaskStatus = TaskStatus.todo
+    # Dates de pilotage (vue Aujourd'hui / relances). planned_date est simplifié
+    # en `date` pour la vue jour ; le créneau horaire viendra avec le calendrier.
+    planned_date: date | None = None
+    due_date: date | None = None
+    followup_date: date | None = None
     xp_reward: int = 0
     created_at: datetime = Field(default_factory=_utcnow)
     updated_at: datetime = Field(default_factory=_utcnow)

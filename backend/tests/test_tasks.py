@@ -60,3 +60,41 @@ def test_stats_aggregate_completed_tasks(client):
     stats = client.get("/stats").json()
     # seule A est terminée : doc -> 25 XP, high -> 15 or
     assert stats == {"total_xp": 25, "total_gold": 15, "completed_tasks": 1}
+
+
+def test_create_with_dates_and_status(client):
+    res = client.post(
+        "/tasks",
+        json={
+            "title": "Relancer NOC",
+            "type": "followup",
+            "status": "waiting",
+            "followup_date": "2026-06-25",
+            "planned_date": "2026-06-23",
+        },
+    )
+    assert res.status_code == 201
+    task = res.json()
+    assert task["status"] == "waiting"
+    assert task["followup_date"] == "2026-06-25"
+    assert task["planned_date"] == "2026-06-23"
+
+
+def test_patch_transitions_status_and_followup(client):
+    tid = client.post("/tasks", json={"title": "Sujet"}).json()["id"]
+    res = client.patch(
+        f"/tasks/{tid}", json={"status": "waiting", "followup_date": "2026-06-30"}
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["status"] == "waiting"
+    assert body["followup_date"] == "2026-06-30"
+
+
+def test_patch_cannot_set_done(client):
+    tid = client.post("/tasks", json={"title": "X"}).json()["id"]
+    assert client.patch(f"/tasks/{tid}", json={"status": "done"}).status_code == 422
+
+
+def test_patch_unknown_returns_404(client):
+    assert client.patch("/tasks/9999", json={"status": "waiting"}).status_code == 404

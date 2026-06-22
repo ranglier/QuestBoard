@@ -40,10 +40,14 @@ export interface Task {
   id: number;
   title: string;
   description: string;
+  notes: string;
   type: TaskType;
   priority: TaskPriority;
   difficulty: TaskDifficulty;
   status: TaskStatus;
+  planned_date: string | null;
+  due_date: string | null;
+  followup_date: string | null;
   xp_reward: number;
   created_at: string;
   updated_at: string;
@@ -54,7 +58,23 @@ export interface NewTask {
   title: string;
   type: TaskType;
   priority: TaskPriority;
+  status?: TaskStatus;
+  planned_date?: string | null;
+  followup_date?: string | null;
 }
+
+export type TaskUpdate = Partial<{
+  title: string;
+  description: string;
+  notes: string;
+  type: TaskType;
+  priority: TaskPriority;
+  difficulty: TaskDifficulty;
+  status: TaskStatus;
+  planned_date: string | null;
+  due_date: string | null;
+  followup_date: string | null;
+}>;
 
 export interface CompletionResult {
   task: Task;
@@ -86,6 +106,16 @@ export async function createTask(payload: NewTask): Promise<Task> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
+    })
+  );
+}
+
+export async function updateTask(id: number, patch: TaskUpdate): Promise<Task> {
+  return asJson(
+    await fetch(`${BASE}/tasks/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch)
     })
   );
 }
