@@ -6,7 +6,8 @@
   const tabs = [
     { href: '/', label: "Aujourd'hui" },
     { href: '/inbox', label: 'Inbox' },
-    { href: '/projets', label: 'Projets' }
+    { href: '/projets', label: 'Projets' },
+    { href: '/calendrier', label: 'Calendrier' }
   ];
 
   const isActive = (href: string) =>

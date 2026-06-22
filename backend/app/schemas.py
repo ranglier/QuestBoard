@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 from pydantic import BaseModel
 
-from .models import ProjectStatus, TaskDifficulty, TaskPriority, TaskStatus, TaskType
+from .models import (
+    EventKind,
+    ProjectStatus,
+    TaskDifficulty,
+    TaskPriority,
+    TaskStatus,
+    TaskType,
+)
 
 
 class TaskCreate(BaseModel):
@@ -96,6 +103,41 @@ class ProjectRead(BaseModel):
 
 class ProjectDetail(ProjectRead):
     tasks: list[TaskRead] = []
+
+
+class EventCreate(BaseModel):
+    title: str
+    event_date: date
+    start_time: time | None = None
+    end_time: time | None = None
+    kind: EventKind = EventKind.event
+    task_id: int | None = None
+    notes: str = ""
+
+
+class EventUpdate(BaseModel):
+    title: str | None = None
+    event_date: date | None = None
+    start_time: time | None = None
+    end_time: time | None = None
+    kind: EventKind | None = None
+    task_id: int | None = None
+    notes: str | None = None
+
+
+class EventRead(BaseModel):
+    id: int
+    title: str
+    event_date: date
+    start_time: time | None
+    end_time: time | None
+    kind: EventKind
+    task_id: int | None
+    notes: str
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
 
 
 class CompletionResult(BaseModel):

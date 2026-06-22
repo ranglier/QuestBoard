@@ -7,7 +7,7 @@ Expedition…) viendront avec le MVP Camp (voir docs/cadrage-projet.md §8).
 
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timezone
 from enum import Enum
 
 from sqlmodel import Field, SQLModel
@@ -74,6 +74,32 @@ class Project(SQLModel, table=True):
     domain: str = ""
     description: str = ""
     status: ProjectStatus = ProjectStatus.active
+    created_at: datetime = Field(default_factory=_utcnow)
+    updated_at: datetime = Field(default_factory=_utcnow)
+
+
+class EventKind(str, Enum):
+    event = "event"  # événement manuel
+    work_slot = "work_slot"  # créneau de travail
+    meeting = "meeting"  # réunion
+    change = "change"  # MEO / changement
+
+
+class CalendarEvent(SQLModel, table=True):
+    """Élément du calendrier local (vue semaine).
+
+    ``start_time``/``end_time`` absents => événement « journée ». ``task_id``
+    relie un créneau à une tâche (bloc créé depuis une tâche).
+    """
+
+    id: int | None = Field(default=None, primary_key=True)
+    title: str
+    event_date: date
+    start_time: time | None = None
+    end_time: time | None = None
+    kind: EventKind = EventKind.event
+    task_id: int | None = Field(default=None, foreign_key="task.id")
+    notes: str = ""
     created_at: datetime = Field(default_factory=_utcnow)
     updated_at: datetime = Field(default_factory=_utcnow)
 

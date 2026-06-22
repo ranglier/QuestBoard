@@ -135,3 +135,46 @@ def test_transform_inbox_entry_to_task(client):
     assert res.status_code == 200
     assert res.json()["status"] == "todo"
     assert res.json()["priority"] == "high"
+
+
+def test_event_crud_and_week_range(client):
+    res = client.post(
+        "/events",
+        json={
+            "title": "Daily",
+            "event_date": "2026-06-23",
+            "start_time": "09:00",
+            "end_time": "09:30",
+            "kind": "meeting",
+        },
+    )
+    assert res.status_code == 201
+    ev = res.json()
+    assert ev["kind"] == "meeting"
+    assert ev["start_time"].startswith("09:00")
+
+    # hors de la semaine demandée -> non listé
+    client.post("/events", json={"title": "Plus tard", "event_date": "2026-07-15"})
+
+    week = client.get("/events", params={"start": "2026-06-22", "end": "2026-06-28"}).json()
+    titles = [e["title"] for e in week]
+    assert "Daily" in titles
+    assert "Plus tard" not in titles
+
+
+def test_event_linked_to_task_and_delete(client):
+    tid = client.post("/tasks", json={"title": "Préparer GDC"}).json()["id"]
+    eid = client.post(
+        "/events",
+        json={
+            "title": "Créneau GDC",
+            "event_date": "2026-06-24",
+            "task_id": tid,
+            "kind": "work_slot",
+        },
+    ).json()["id"]
+    assert client.get("/events", params={"start": "2026-06-24", "end": "2026-06-24"}).json()[0][
+        "task_id"
+    ] == tid
+    assert client.delete(f"/events/{eid}").status_code == 204
+    assert client.delete(f"/events/{eid}").status_code == 404

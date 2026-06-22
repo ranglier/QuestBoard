@@ -107,6 +107,31 @@ export type ProjectUpdate = Partial<{
   status: ProjectStatus;
 }>;
 
+export type EventKind = 'event' | 'work_slot' | 'meeting' | 'change';
+
+export interface CalendarEvent {
+  id: number;
+  title: string;
+  event_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  kind: EventKind;
+  task_id: number | null;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NewEvent {
+  title: string;
+  event_date: string;
+  start_time?: string | null;
+  end_time?: string | null;
+  kind?: EventKind;
+  task_id?: number | null;
+  notes?: string;
+}
+
 export interface CompletionResult {
   task: Task;
   xp_gained: number;
@@ -190,4 +215,23 @@ export async function updateProject(id: number, patch: ProjectUpdate): Promise<P
       body: JSON.stringify(patch)
     })
   );
+}
+
+export async function listEvents(start: string, end: string): Promise<CalendarEvent[]> {
+  return asJson(await fetch(`${BASE}/events?start=${start}&end=${end}`));
+}
+
+export async function createEvent(payload: NewEvent): Promise<CalendarEvent> {
+  return asJson(
+    await fetch(`${BASE}/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+  );
+}
+
+export async function deleteEvent(id: number): Promise<void> {
+  const res = await fetch(`${BASE}/events/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
 }
