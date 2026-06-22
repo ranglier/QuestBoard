@@ -49,11 +49,54 @@ The repository is prepared for Docker Compose from the beginning.
 docker compose up --build
 ```
 
+> **Windows note:** Docker Desktop needs a backend engine. If `docker compose up`
+> reports the daemon is unreachable, enable WSL2 first (`wsl --install`, requires
+> admin rights and a reboot), then start Docker Desktop.
+
 Expected local services:
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - Backend healthcheck: http://localhost:8000/health
+
+### Behind a corporate TLS proxy
+
+If `docker compose build` fails with `SSL: CERTIFICATE_VERIFY_FAILED`, a proxy is
+intercepting TLS and the build containers don't trust its root CA. To fix it
+locally (the CA is used at build time only, never baked into the images):
+
+1. Export the machine's root CAs to `certs/host-roots.crt` (PowerShell, from
+   `Cert:\LocalMachine\Root`).
+2. `cp compose.override.example.yaml compose.override.yaml`
+3. `docker compose build`
+
+Both `certs/` and `compose.override.yaml` are git-ignored. On a machine without an
+intercepting proxy, do nothing — the secret is optional and builds work as-is.
+
+> **⚠️ To revisit (tech debt):** the corporate-proxy CA handling is a stop-gap for
+> prototyping. Before sharing/porting this app, revisit how TLS/CA is provided for
+> builds (e.g. proper per-environment config, or dropping the proxy hook entirely).
+> Tracked because it couples local builds to one corporate environment.
+
+### V0 task loop
+
+The technical V0 validates the core stack end to end: create a task, complete
+it, and see the computed XP/gold. From the frontend at http://localhost:5173 you
+can capture a task, then click **Terminer** to credit XP (from difficulty) and
+gold (from priority), per the scoring rules in `docs/cadrage-projet.md` §5.
+
+API surface (V0):
+
+- `POST /tasks` — create a task (only `title` is required)
+- `GET /tasks` — list tasks
+- `POST /tasks/{id}/complete` — complete a task, returns XP/gold gained
+- `GET /stats` — aggregated XP/gold over completed tasks
+
+Backend tests (inside the backend container):
+
+```bash
+docker compose run --rm backend sh -c "pip install -e '.[dev]' && pytest"
+```
 
 ## Data policy
 

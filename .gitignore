@@ -9,6 +9,16 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*.egg-info/
+
+# Local toolchains (portable Python / Node installed locally, no admin)
+.tools/
+
+# Corporate TLS proxy: local CA bundle + real compose override (per machine, never committed).
+# The mechanism is documented by compose.override.example.yaml (tracked).
+/certs/
+compose.override.yaml
+compose.override.yml
 
 # Node / SvelteKit
 node_modules/
@@ -39,3 +49,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Claude Code local config
+.claude/

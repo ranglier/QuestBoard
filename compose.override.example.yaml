@@ -1,0 +1,25 @@
+# Exemple d'override LOCAL pour builder derriere un proxy d'entreprise qui
+# intercepte TLS (erreurs "SSL: CERTIFICATE_VERIFY_FAILED" pendant le build).
+#
+# Mise en place (le fichier reel compose.override.yaml est gitignore) :
+#   1. Exporter les CA racine de la machine vers ./certs/host-roots.crt
+#      (PowerShell : magasin Cert:\LocalMachine\Root -> bundle PEM)
+#   2. cp compose.override.example.yaml compose.override.yaml
+#   3. docker compose build
+#
+# Le CA est monte comme secret BuildKit : utilise uniquement au build, JAMAIS
+# inclus dans les images. Sur une machine sans proxy, ne rien faire : les builds
+# fonctionnent sans override (le secret est optionnel).
+services:
+  backend:
+    build:
+      secrets:
+        - proxy_ca
+  frontend:
+    build:
+      secrets:
+        - proxy_ca
+
+secrets:
+  proxy_ca:
+    file: ./certs/host-roots.crt
