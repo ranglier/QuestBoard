@@ -56,11 +56,12 @@ export interface Task {
 
 export interface NewTask {
   title: string;
-  type: TaskType;
-  priority: TaskPriority;
+  type?: TaskType;
+  priority?: TaskPriority;
   status?: TaskStatus;
   planned_date?: string | null;
   followup_date?: string | null;
+  project_id?: number | null;
 }
 
 export type TaskUpdate = Partial<{
@@ -74,6 +75,36 @@ export type TaskUpdate = Partial<{
   planned_date: string | null;
   due_date: string | null;
   followup_date: string | null;
+  project_id: number | null;
+}>;
+
+export type ProjectStatus = 'active' | 'archived';
+
+export interface Project {
+  id: number;
+  name: string;
+  domain: string;
+  description: string;
+  status: ProjectStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectDetail extends Project {
+  tasks: Task[];
+}
+
+export interface NewProject {
+  name: string;
+  domain?: string;
+  description?: string;
+}
+
+export type ProjectUpdate = Partial<{
+  name: string;
+  domain: string;
+  description: string;
+  status: ProjectStatus;
 }>;
 
 export interface CompletionResult {
@@ -124,6 +155,39 @@ export async function completeTask(id: number): Promise<CompletionResult> {
   return asJson(await fetch(`${BASE}/tasks/${id}/complete`, { method: 'POST' }));
 }
 
+export async function deleteTask(id: number): Promise<void> {
+  const res = await fetch(`${BASE}/tasks/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+}
+
 export async function getStats(): Promise<Stats> {
   return asJson(await fetch(`${BASE}/stats`));
+}
+
+export async function listProjects(includeArchived = false): Promise<Project[]> {
+  return asJson(await fetch(`${BASE}/projects?include_archived=${includeArchived}`));
+}
+
+export async function getProject(id: number): Promise<ProjectDetail> {
+  return asJson(await fetch(`${BASE}/projects/${id}`));
+}
+
+export async function createProject(payload: NewProject): Promise<Project> {
+  return asJson(
+    await fetch(`${BASE}/projects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+  );
+}
+
+export async function updateProject(id: number, patch: ProjectUpdate): Promise<Project> {
+  return asJson(
+    await fetch(`${BASE}/projects/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch)
+    })
+  );
 }

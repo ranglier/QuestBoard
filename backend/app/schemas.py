@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel
 
-from .models import TaskDifficulty, TaskPriority, TaskStatus, TaskType
+from .models import ProjectStatus, TaskDifficulty, TaskPriority, TaskStatus, TaskType
 
 
 class TaskCreate(BaseModel):
@@ -25,6 +25,7 @@ class TaskCreate(BaseModel):
     planned_date: date | None = None
     due_date: date | None = None
     followup_date: date | None = None
+    project_id: int | None = None
 
 
 class TaskUpdate(BaseModel):
@@ -44,6 +45,7 @@ class TaskUpdate(BaseModel):
     planned_date: date | None = None
     due_date: date | None = None
     followup_date: date | None = None
+    project_id: int | None = None
 
 
 class TaskRead(BaseModel):
@@ -58,12 +60,42 @@ class TaskRead(BaseModel):
     planned_date: date | None
     due_date: date | None
     followup_date: date | None
+    project_id: int | None
     xp_reward: int
     created_at: datetime
     updated_at: datetime
     completed_at: datetime | None
 
     model_config = {"from_attributes": True}
+
+
+class ProjectCreate(BaseModel):
+    name: str
+    domain: str = ""
+    description: str = ""
+
+
+class ProjectUpdate(BaseModel):
+    name: str | None = None
+    domain: str | None = None
+    description: str | None = None
+    status: ProjectStatus | None = None
+
+
+class ProjectRead(BaseModel):
+    id: int
+    name: str
+    domain: str
+    description: str
+    status: ProjectStatus
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ProjectDetail(ProjectRead):
+    tasks: list[TaskRead] = []
 
 
 class CompletionResult(BaseModel):

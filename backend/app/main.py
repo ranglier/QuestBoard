@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 
 from .db import get_session, init_db
-from .routers import tasks
+from .routers import projects, tasks
 from .routers.tasks import compute_stats
 from .schemas import Stats
 
@@ -35,6 +35,7 @@ app.add_middleware(
 )
 
 app.include_router(tasks.router)
+app.include_router(projects.router)
 
 
 @app.get("/")

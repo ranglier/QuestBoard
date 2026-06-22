@@ -98,3 +98,40 @@ def test_patch_cannot_set_done(client):
 
 def test_patch_unknown_returns_404(client):
     assert client.patch("/tasks/9999", json={"status": "waiting"}).status_code == 404
+
+
+def test_delete_task(client):
+    tid = client.post("/tasks", json={"title": "À jeter", "status": "inbox"}).json()["id"]
+    assert client.delete(f"/tasks/{tid}").status_code == 204
+    assert client.delete(f"/tasks/{tid}").status_code == 404
+
+
+def test_project_crud_and_detail(client):
+    # création
+    pid = client.post(
+        "/projects", json={"name": "Audit mail", "domain": "Messagerie"}
+    ).json()["id"]
+    # liste (actifs)
+    assert any(p["id"] == pid for p in client.get("/projects").json())
+    # tâche liée au projet
+    tid = client.post(
+        "/tasks", json={"title": "Analyser flux", "project_id": pid}
+    ).json()["id"]
+    detail = client.get(f"/projects/{pid}").json()
+    assert detail["name"] == "Audit mail"
+    assert [t["id"] for t in detail["tasks"]] == [tid]
+    # archivage -> disparaît de la liste active, visible avec include_archived
+    client.patch(f"/projects/{pid}", json={"status": "archived"})
+    assert all(p["id"] != pid for p in client.get("/projects").json())
+    assert any(
+        p["id"] == pid for p in client.get("/projects?include_archived=true").json()
+    )
+
+
+def test_transform_inbox_entry_to_task(client):
+    # une entrée inbox = tâche au statut inbox ; la qualifier = PATCH
+    tid = client.post("/tasks", json={"title": "Idée vrac", "status": "inbox"}).json()["id"]
+    res = client.patch(f"/tasks/{tid}", json={"status": "todo", "priority": "high"})
+    assert res.status_code == 200
+    assert res.json()["status"] == "todo"
+    assert res.json()["priority"] == "high"

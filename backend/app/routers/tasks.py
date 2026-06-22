@@ -29,6 +29,7 @@ def create_task(payload: TaskCreate, session: Session = Depends(get_session)) ->
         planned_date=payload.planned_date,
         due_date=payload.due_date,
         followup_date=payload.followup_date,
+        project_id=payload.project_id,
     )
     session.add(task)
     session.commit()
@@ -63,6 +64,15 @@ def update_task(
     session.commit()
     session.refresh(task)
     return task
+
+
+@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(task_id: int, session: Session = Depends(get_session)) -> None:
+    task = session.get(Task, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Tâche introuvable")
+    session.delete(task)
+    session.commit()
 
 
 @router.post("/{task_id}/complete", response_model=CompletionResult)

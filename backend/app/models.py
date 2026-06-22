@@ -61,6 +61,23 @@ class TaskDifficulty(str, Enum):
     major = "major"
 
 
+class ProjectStatus(str, Enum):
+    active = "active"
+    archived = "archived"
+
+
+class Project(SQLModel, table=True):
+    """Projet / regroupement de tâches, rangé par domaine (libre)."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
+    domain: str = ""
+    description: str = ""
+    status: ProjectStatus = ProjectStatus.active
+    created_at: datetime = Field(default_factory=_utcnow)
+    updated_at: datetime = Field(default_factory=_utcnow)
+
+
 class Task(SQLModel, table=True):
     """Tâche du Dashboard.
 
@@ -82,6 +99,7 @@ class Task(SQLModel, table=True):
     planned_date: date | None = None
     due_date: date | None = None
     followup_date: date | None = None
+    project_id: int | None = Field(default=None, foreign_key="project.id")
     xp_reward: int = 0
     created_at: datetime = Field(default_factory=_utcnow)
     updated_at: datetime = Field(default_factory=_utcnow)
