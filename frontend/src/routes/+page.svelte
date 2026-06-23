@@ -1,16 +1,29 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   import {
     completeTask,
     createTask,
     getStats,
+    listEvents,
     listTasks,
     updateTask,
+    type CalendarEvent,
+    type EventKind,
     type Stats,
     type Task,
     type TaskPriority,
     type TaskType
   } from '$lib/api';
+
+  const EVENT_KIND_LABEL: Record<EventKind, string> = {
+    event: 'Événement',
+    work_slot: 'Créneau',
+    meeting: 'Réunion',
+    change: 'MEO'
+  };
+  const hhmm = (t: string | null) => (t ? t.slice(0, 5) : '');
+  const AGENDA_PREF = 'qb_show_agenda';
 
   const TYPES: { value: TaskType; label: string }[] = [
     { value: 'exploitation', label: 'Exploitation' },
@@ -58,6 +71,8 @@
 
   let tasks = $state<Task[]>([]);
   let stats = $state<Stats>({ total_xp: 0, total_gold: 0, completed_tasks: 0 });
+  let todayEvents = $state<CalendarEvent[]>([]);
+  let showAgenda = $state(true);
   let error = $state<string | null>(null);
   let lastReward = $state<{ xp: number; gold: number } | null>(null);
 
@@ -91,9 +106,23 @@
     tasks.filter((t) => t.status === 'done' && (t.completed_at ?? '').slice(0, 10) === today)
   );
 
+  // Agenda du jour : sans-horaire d'abord, puis par heure de début.
+  const agenda = $derived(
+    [...todayEvents].sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''))
+  );
+
+  function toggleAgenda() {
+    showAgenda = !showAgenda;
+    if (browser) localStorage.setItem(AGENDA_PREF, showAgenda ? '1' : '0');
+  }
+
   async function refresh() {
     try {
-      [tasks, stats] = await Promise.all([listTasks(), getStats()]);
+      [tasks, stats, todayEvents] = await Promise.all([
+        listTasks(),
+        getStats(),
+        listEvents(today, today)
+      ]);
       error = null;
     } catch (e) {
       error = e instanceof Error ? e.message : String(e);
@@ -136,7 +165,10 @@
   const waitUntil = (t: Task, followup: string) =>
     run(updateTask(t.id, { status: 'waiting', followup_date: followup }));
 
-  onMount(refresh);
+  onMount(() => {
+    if (browser && localStorage.getItem(AGENDA_PREF) === '0') showAgenda = false;
+    refresh();
+  });
 </script>
 
 <svelte:head>
@@ -191,6 +223,31 @@
       <button type="submit">Créer</button>
     </form>
   </article>
+
+  <section class="section agenda">
+    <h2>
+      Agenda du jour
+      {#if showAgenda}<span class="count">{agenda.length}</span>{/if}
+      <button class="link" onclick={toggleAgenda}>
+        {showAgenda ? 'masquer' : 'afficher'}
+      </button>
+    </h2>
+    {#if showAgenda}
+      {#if agenda.length === 0}
+        <p class="empty">Aucun événement aujourd'hui. <a href="/calendrier">Ouvrir le calendrier</a></p>
+      {:else}
+        <ul class="agenda-list">
+          {#each agenda as e (e.id)}
+            <li class="agenda-item kind-{e.kind}">
+              <span class="ag-time">{e.start_time ? hhmm(e.start_time) + (e.end_time ? '–' + hhmm(e.end_time) : '') : 'journée'}</span>
+              <span class="ag-title">{e.title}</span>
+              <span class="ag-kind">{EVENT_KIND_LABEL[e.kind]}</span>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    {/if}
+  </section>
 
   <section class="section">
     <h2>Planifié aujourd'hui <span class="count">{buckets.planned.length}</span></h2>
@@ -315,6 +372,70 @@
     border-radius: 999px;
     font-size: 12px;
     padding: 1px 8px;
+  }
+  .link {
+    border: none;
+    background: none;
+    color: #64748b;
+    font: inherit;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+  }
+  .agenda {
+    background: #fbfaf7;
+    border: 1px solid #e7e2d8;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 16px;
+  }
+  .agenda h2 {
+    margin-bottom: 0;
+  }
+  .agenda-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .agenda-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #94a3b8;
+    border-radius: 8px;
+  }
+  .agenda-item.kind-meeting {
+    border-left-color: #6366f1;
+  }
+  .agenda-item.kind-change {
+    border-left-color: #f97316;
+  }
+  .agenda-item.kind-work_slot {
+    border-left-color: #0ea5e9;
+  }
+  .ag-time {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: #475569;
+    min-width: 92px;
+    font-size: 13px;
+  }
+  .ag-title {
+    flex: 1;
+  }
+  .ag-kind {
+    color: #94a3b8;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .resources {
     display: flex;
